@@ -27,11 +27,11 @@ db.open(function(err) {
     assert(db.classes.length >= 2);
     assert.equal(0, db.getClusterByName("Internal").id);
     // cluster name case should not matter
-    assert.equal(4, db.getClusterByName("OuSeR").id);
+    var userClusterId = db.getClusterByName("OuSeR").id;
 
     assert.equal("internal", db.getClusterById(0).name);
-    assert.equal("ouser", db.getClusterById(4).name);
-    assert.equal("MEMORY", db.getClusterById(4).type);
+    assert.equal("ouser", db.getClusterById(userClusterId).name);
+    assert.equal("MEMORY", db.getClusterById(userClusterId).type);
 
     assert.equal("OUser", db.getClassByName("OUser").name);
     assert.equal(null, db.getClassByName("ouser"));
