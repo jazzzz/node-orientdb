@@ -9,7 +9,7 @@ var server = new Server(serverConfig);
 
 server.connect(function(err) {
 
-    assert(!err, "Error while connecting to the server: " + JSON.stringify(err));
+    assert(!err, "Error while connecting to the server: " + err);
 
     assert(server.sessionId > -1, "The session ID is not valid.");
 

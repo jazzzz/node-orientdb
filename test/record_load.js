@@ -16,12 +16,11 @@ db.open(function(err, result) {
     assert(!err, "Error while opening the database: " + err);
 
     var cluster = db.getClusterByClass("OUser");
-
-//    assert.equal(4, cluster.id);
-
     var rid = "#" + cluster.id + ":" + 0;
 
     db.loadRecord(rid, function(err, record) {
+
+        var roleCluster = db.getClusterByClass("ORole");
 
         assert(!err, "Error while loading record: " + err);
 
@@ -33,11 +32,11 @@ db.open(function(err, result) {
             "name": "anotheruser",
             "password": "password",
             "status": "ACTIVE",
-            "roles": ["#3:0"]
+            "roles": ["#" + roleCluster.id + ":0"]
         };
 
         db.save(newUser, function(err, newUser) {
-            assert(!err);
+            assert(!err, "Error while saving user: " + err);
 
             var newUserRID = newUser["@rid"];
 
