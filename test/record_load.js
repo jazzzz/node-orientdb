@@ -26,6 +26,8 @@ db.open(function(err, result) {
 
     db.loadRecord(urid, function(err, record) {
 
+        var roleCluster = db.getClusterByClass("ORole");
+
         assert(!err, "Error while loading record: " + err);
         assert(record, "Null record? Where is the OUser " + urid);
         console.log("User loaded: " + JSON.stringify(record));
