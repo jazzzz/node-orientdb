@@ -24,8 +24,8 @@ graphdb.open(function(err) {
                     edges.push(edge["@rid"]);
 
                     if (edges.length === 50) {
-                        graphdb.loadRecord(fromVertex["@rid"], {fetchPlan:'*:1'}, function(err, fromVertex) {
-                            console.log( 'fromVertex', fromVertex );
+                        graphdb.loadRecord(fromVertex["@rid"], {fetchPlan:'*:1'}, function(err, fromVertex, cache) {
+                            console.log( 'fromVertex:', fromVertex, '\ncache:', cache );
                             assert(!err, err);
 
                             assert.equal(50, fromVertex.out.length);
