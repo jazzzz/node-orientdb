@@ -20,7 +20,7 @@ db.open(function(err, result) {
     // create one class for this test
     db.command("CREATE CLASS TestLongValues", function(err, results) {
 
-        assert(!err, "Error while executing a CREATE CLASS command: " + JSON.stringify(err));
+        assert(!err, "Error while executing a CREATE CLASS command: " + err);
         assert.equal(results.length, 1, "The ID of the created class should be returned.");
 
         console.log("Class TestLongValues created with ID: " + results[0]);
