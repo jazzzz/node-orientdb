@@ -96,7 +96,14 @@ db.open(function(err) {
             assert(!parser.isUndefined(savedDoc.linked_map.link1["@class"]));
             assert(!parser.isUndefined(savedDoc.linked_map.link1["@version"]));
 
-            db.close();
+            db.command("DROP CLASS mainClass", function(err) {
+                assert(!err,err);
+                db.command("DROP CLASS subClass", function(err) {
+                    assert(!err,err);
+
+                    db.close();
+                });
+            });
         });
     });
 });
@@ -117,7 +124,6 @@ function prepareDatabase(callback) {
 
                     db.command("CREATE PROPERTY mainClass.linked_map linkmap subClass", function(err) {
                         if (err) return callback(err);
-
                         callback();
                     });
                 });
