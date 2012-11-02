@@ -9,6 +9,7 @@ var dbConfig = require("../config/test/dbConfig");
 
 var server = new Server(serverConfig);
 var graphdb = new GraphDb("temp", server, dbConfig);
+var count = 50;
 
 graphdb.open(function(err) {
     graphdb.createVertex({ name: "from vertex" }, function(err1, fromVertex) {
@@ -17,23 +18,22 @@ graphdb.open(function(err) {
             assert(!err, err);
 
             var edges = [];
-            for (var i = 0; i < 50; i++) {
+            for (var i = 0; i < count; i++) {
                 graphdb.createEdge(fromVertex["@rid"], toVertex["@rid"], function(err, edge) {
                     assert(!err, err);
 
                     edges.push(edge["@rid"]);
 
-                    if (edges.length === 50) {
-                        graphdb.loadRecord(fromVertex["@rid"], {fetchPlan:'*:1'}, function(err, fromVertex, cache) {
-                            console.log( 'fromVertex:', fromVertex, '\ncache:', cache );
+                    if (edges.length === count) {
+                        graphdb.loadRecord(fromVertex["@rid"], function(err, fromVertex, cache) {
                             assert(!err, err);
 
-                            assert.equal(50, fromVertex.out.length);
+                            assert.equal(count, fromVertex.out.length);
 
-                            graphdb.command("select from " + fromVertex["@rid"], {mode: 'a', fetchPlan:'*:1'}, function(err, results) {
+                            graphdb.selectAsync("select from " + fromVertex["@rid"], function(err, results) {
                                 assert(!err, err);
 
-                                assert.equal(50, results[0].out.length);
+                                assert.equal(count, results[0].out.length);
                                 
                                 graphdb.close();
                             });
