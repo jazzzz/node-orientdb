@@ -34,7 +34,7 @@ graphdb.open(function(err) {
                                 assert(!err, err);
 
                                 assert.equal(count, results[0].out.length);
-                                
+
                                 graphdb.close();
                             });
                         });
