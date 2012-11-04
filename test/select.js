@@ -30,30 +30,21 @@ graphdb.open(function(err) {
                 assert(!err, err);
                 assert.notEqual(0, results.length);
                 
-                var recordCount = 0;
-                graphdb.selectAsync("select from OUser").forEach(function(err, record) {
+                graphdb.selectAsync("select from OUser", function(err, results) {
                     assert(!err, err);
-                    if (record) {
-                        recordCount++;
-                    } else {
-                        assert.notEqual(0, recordCount);
-                        graphdb.selectAsync("select from OUser", function(err, results) {
+                    assert.notEqual(0, results.length);
+
+                    graphdb.select("select from OUser where name = ?", {params: ['admin']}, function(err, results) {
+                        assert(!err, err);
+                        assert.equal(1, results.length);
+
+                        graphdb.selectAsync("select from OUser where name = :name", {params: {name: 'reader'}}, function(err, results) {
                             assert(!err, err);
-                            assert.notEqual(0, results.length);
+                            assert.equal(1, results.length);
 
-                            graphdb.select("select from OUser where name = ?", {params: ['admin']}, function(err, results) {
-                                assert(!err, err);
-                                assert.equal(1, results.length);
-
-                                graphdb.selectAsync("select from OUser where name = :name", {params: {name: 'reader'}}, function(err, results) {
-                                    assert(!err, err);
-                                    assert.equal(1, results.length);
-
-                                    graphdb.close();
-                                });
-                            });
+                            graphdb.close();
                         });
-                    }
+                    });
                 });
             });
         });
