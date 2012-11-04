@@ -32,7 +32,7 @@ graphdb.open(function(err) {
                 graphdb.command("select flatten(out[label = \"select_flatten\"].in) from V", function(err, results) {
                     assert(!err, err);
 
-                    assert.equal(1, results.length);
+                    assert.notEqual(0, results.length);
                     assert(!parser.isUndefined(results[0]["@rid"]));
                     assert(!parser.isUndefined(results[0]["@type"]));
 
