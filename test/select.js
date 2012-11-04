@@ -14,23 +14,37 @@ var graphdb = new GraphDb("temp", server, dbConfig);
 graphdb.open(function(err) {
     assert(!err, err);
 
-    graphdb.select("select from OUser", function(err, results) {
+    var name = '"name\\ \\"';
+    graphdb.createVertex({name: name}, function(err, vertex) {
         assert(!err, err);
-        assert.notEqual(0, results.length);
 
-        graphdb.selectAsync("select from OUser", function(err, results) {
+        assert(!parser.isUndefined(vertex["@rid"]));
+        assert.equal(vertex.name, name);
+
+        graphdb.select("select from V where name = ?", {params: [name]}, function(err, results) {
             assert(!err, err);
             assert.notEqual(0, results.length);
+            assert.equal(name, results[0].name);
 
-            graphdb.select("select from OUser where name = ?", {params: ['admin']}, function(err, results) {
+            graphdb.select("select from OUser", function(err, results) {
                 assert(!err, err);
-                assert.equal(1, results.length);
+                assert.notEqual(0, results.length);
 
-                graphdb.selectAsync("select from OUser where name = :name", {params: {name: 'reader'}}, function(err, results) {
+                graphdb.selectAsync("select from OUser", function(err, results) {
                     assert(!err, err);
-                    assert.equal(1, results.length);
+                    assert.notEqual(0, results.length);
 
-                    graphdb.close();
+                    graphdb.select("select from OUser where name = ?", {params: ['admin']}, function(err, results) {
+                        assert(!err, err);
+                        assert.equal(1, results.length);
+
+                        graphdb.selectAsync("select from OUser where name = :name", {params: {name: 'reader'}}, function(err, results) {
+                            assert(!err, err);
+                            assert.equal(1, results.length);
+
+                            graphdb.close();
+                        });
+                    });
                 });
             });
         });
