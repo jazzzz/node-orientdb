@@ -1,5 +1,5 @@
 var assert = require("assert");
-var parser = require("../lib/orientdb/connection/parser");
+var _ = require("underscore");
 
 var orient = require("../lib/orientdb"),
     GraphDb = orient.GraphDb,
@@ -18,7 +18,7 @@ graphdb.open(function(err) {
     graphdb.createVertex({name: name}, function(err, vertex) {
         assert(!err, err);
 
-        assert(!parser.isUndefined(vertex["@rid"]));
+        assert(!_.isUndefined(vertex["@rid"]));
         assert.equal(vertex.name, name);
 
         graphdb.select("select from V where name = ?", {params: [name]}, function(err, results) {

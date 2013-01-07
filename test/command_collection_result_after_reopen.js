@@ -1,5 +1,4 @@
 var assert = require("assert");
-var parser = require("../lib/orientdb/connection/parser");
 
 var orient = require("../lib/orientdb"),
     Db = orient.Db,
