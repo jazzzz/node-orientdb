@@ -13,7 +13,8 @@
         "type"      : "git",
         "url"       : "http://github.com/gabipetrovay/node-orientdb.git" },
     "dependencies"   : {
-        "underscore" : "1.4.x"
+        "underscore" : "1.4.x",
+        "async"      : "0.1.x"
     },
     "devDependencies"   : {
         "tap"       : "0.3.1"

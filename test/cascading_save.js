@@ -1,4 +1,5 @@
 var assert = require("assert");
+var async = require("async");
 
 var orient = require("../lib/orientdb"),
     Db = orient.Db,
@@ -105,35 +106,19 @@ db.open(function(err) {
 });
 
 function prepareDatabase(callback) {
-    db.createClass("mainClass", function(err) {
-        if (err) return callback(err);
-
-        db.createClass("subClass", function(err) {
-            if (err) return callback(err);
-
-            db.command("CREATE PROPERTY mainClass.sub_document link subClass", function(err) {
-                if (err) return callback(err);
-
-                db.command("CREATE PROPERTY mainClass.sub_documents linklist subClass", function(err) {
-                    if (err) return callback(err);
-
-
-                    db.command("CREATE PROPERTY mainClass.linked_map linkmap subClass", function(err) {
-                        if (err) return callback(err);
-
-                        callback();
-                    });
-                });
-            });
-        });
-    });
+    async.series([
+        db.createClass.bind(db, "mainClass"),
+        db.createClass.bind(db, "subClass"),
+        db.command.bind(db, "CREATE PROPERTY mainClass.sub_document link subClass"),
+        db.command.bind(db, "CREATE PROPERTY mainClass.sub_documents linklist subClass"),
+        db.command.bind(db, "CREATE PROPERTY mainClass.linked_map linkmap subClass")
+    ], callback);
 }
 
 
 function unprepareDatabase(callback) {
-    db.dropClass("subClass", function(err) {
-        if (err) return callback(err);
-
-        db.dropClass("mainClass", callback);
-    });
+    async.series([
+        db.dropClass.bind(db, "subClass"),
+        db.dropClass.bind(db, "mainClass")
+    ], callback);
 }
